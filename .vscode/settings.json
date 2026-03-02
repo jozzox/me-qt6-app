@@ -1,4 +1,8 @@
 {
   "python-envs.pythonProjects": [],
-  "python.analysis.diagnosticMode": "workspace"
+  "python.analysis.diagnosticMode": "workspace",
+  "code-runner.executorMap": {
+    "python": "cd $workspaceRoot && uv run python -u $fullFileName"
+  },
+  "code-runner.fileDirectoryAsCwd": false
 }
