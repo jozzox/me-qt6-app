@@ -6,7 +6,7 @@
 - **Version**: 0.1.0
 - **Tech Stack**: PyQt6, Qt6, CMake, Python 3.11+
 - **Plattform**: macOS M4
-- **Entwicklungsumgebung**: Virtual Environment (.venv)
+- **Entwicklungsumgebung**: Virtual Environment (.venv) + uv
 
 ---
 
@@ -22,13 +22,13 @@
 # Alte Version:
 #!/usr/bin/env python
 
-# Neue Version:
-#!/usr/bin/env python3
+# Neue Version (uv):
+#!/usr/bin/env -S uv run python
 ```
 
 **Datei**: [build.py](build.py#L1)
 
-**Reason**: macOS hat nur `python3` nativ oder via Homebrew/pyenv
+**Reason**: Code Runner und Terminal nutzen uv-Umgebung konsistent
 
 ---
 
@@ -76,10 +76,12 @@ brew install python@3.13
 **Installation**:
 
 ```bash
-pip3 install pyqt6>=6.10.2 qtpy>=2.4.3
+uv sync
+# oder
+uv pip install pyqt6>=6.10.2 qtpy>=2.4.3
 ```
 
-**Status**: ✅ Erfolgreich in venv installiert
+**Status**: ✅ Erfolgreich via uv installiert
 
 ---
 
@@ -100,8 +102,7 @@ chmod +x build.py
 **Test 1 - Mit venv**:
 
 ```bash
-source .venv/bin/activate
-python build.py
+uv run python build.py
 
 ```
 
@@ -131,20 +132,19 @@ source .venv/bin/activate
 ```bash
 ./build.py
 # oder
-python build.py
+uv run python build.py
 ```
 
 ### Mit Qt6 & PyQt6 arbeiten
 
 ```bash
-python main.py
+uv run python main.py
 ```
 
 ### Neue Abhängigkeiten hinzufügen
 
 ```bash
-pip install <package>
-pip freeze > requirements.txt  # (wenn vorhanden)
+uv pip install <package>
 ```
 
 ---
@@ -188,9 +188,34 @@ me_qt6_app/
 **Lösung**:
 
 ```bash
-source .venv/bin/activate
-pip install pyqt6 qtpy
+uv sync
+# oder
+uv pip install pyqt6 qtpy
+### Problem: VS Code Code Runner nutzt falsches Python
+
+**Symptom**: Play-Button meldet `/bin/sh: python: command not found` oder fehlende Packages
+
+**Fix**: Code Runner auf uv umstellen
+
+```json
+"code-runner.executorMap": {
+    "python": "cd $workspaceRoot && uv run python -u $fullFileName"
+}
 ```
+
+**Datei**: [.vscode/settings.json](.vscode/settings.json)
+
+### Problem: Pylance meldet "PyQt6.QtGui imported but not used"
+
+**Ursache**: pyuic6 generiert Import, QtGui wird nicht immer genutzt
+
+**Fix**: pyright-Direktive in generierter Datei
+
+```python
+# pyright: reportUnusedImport=false
+```
+
+**Hinweis**: Wird automatisch von [build.py](build.py) gesetzt
 
 ### Problem: Python Version Konflikt
 
@@ -208,16 +233,16 @@ which python            # Überprüfe ob python existiert
 
 ## 💡 Best Practices für Zukunft
 
-✅ **Immer venv verwenden**
+✅ **Immer uv verwenden**
 
 ```bash
-source .venv/bin/activate
+uv run python <script.py>
 ```
 
-✅ **Shebang mit python3** in allen Scripts
+✅ **Shebang mit uv run** in allen Scripts
 
 ```bash
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run python
 ```
 
 ✅ **pyproject.toml realistisch halten**
@@ -234,7 +259,7 @@ requires-python = ">=3.11"  # Statt 3.14 oder 2.7
 ✅ **Build & Runtime testen**
 
 ```bash
-./build.py && python main.py
+./build.py && uv run python main.py
 ```
 
 ---
