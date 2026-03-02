@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Compile Qt UI files to Python modules."""
 
 import os

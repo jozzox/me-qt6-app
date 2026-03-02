@@ -3,8 +3,5 @@ name = "me-qt6-app"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
-dependencies = [
-    "pyqt6>=6.10.2",
-    "qtpy>=2.4.3",
-]
+requires-python = ">=3.11"
+dependencies = ["pyqt6>=6.10.2", "qtpy>=2.4.3"]
