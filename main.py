@@ -2,6 +2,8 @@ import sys
 
 from qtpy import QtWidgets
 
+from ui.mainwindow import Ui_MainWindow
+
 
 def main():
     # Initialize application
@@ -10,7 +12,8 @@ def main():
     # Create main window
     window = QtWidgets.QMainWindow()
     window.setWindowTitle("me-qt6-app")
-    window.setGeometry(100, 100, 800, 600)
+    ui = Ui_MainWindow()
+    ui.setupUi(window)
     window.show()
 
     # Run event loop
